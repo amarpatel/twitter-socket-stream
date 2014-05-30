@@ -1,3 +1,5 @@
+var socket = io();
+
 // creates a google map centered at hack reactor
 function initialize() {
   var mapOptions = {
@@ -8,12 +10,20 @@ function initialize() {
       mapOptions);
   
   google.maps.event.addListener(map, 'bounds_changed', function () {
-    var boundsObj = this.getBounds();
+    var boundsObj = this.getBounds().toString().match(/[^()]/g).join('').split(',');
 
-    var botRight = '(' + boundsObj.Ba.j + ', ' + boundsObj.ra.j + ')';
-    var topLeft = '(' + boundsObj.Ba.k + ', ' + boundsObj.ra.k + ')';
+    // var coords = boundsObj.toString().match(/[^()]/g);
 
-    console.log('top left: ', topLeft, 'bottom right: ', botRight);
+    // var coords = [boundsObj.Ba.j, boundsObj.ra.j, boundsObj.Ba.k, boundsObj.ra.k];
+    // var botRight = '(' + boundsObj.Ba.j + ', ' + boundsObj.ra.j + ')';
+    // var topLeft = '(' + boundsObj.Ba.k + ', ' + boundsObj.ra.k + ')';
+
+    // console.log('top left: ', topLeft, 'bottom right: ', botRight);
+    console.log('here: ',boundsObj);
+
+    socket.emit('bounds', boundsObj);
+
+
     // debugger;
     new google.maps.Marker({position: {lat: 37.783544, lng: -122.408942}, map: this}); 
     // console.log('here: ',this.contains(38.05184965050697, -121.23022915515139));
