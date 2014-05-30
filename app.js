@@ -1,4 +1,5 @@
-var socket = io();
+var socket = io('localhost:3000');
+
 
 // creates a google map centered at hack reactor
 function initialize() {
@@ -10,7 +11,8 @@ function initialize() {
       mapOptions);
   
   google.maps.event.addListener(map, 'bounds_changed', function () {
-    var boundsObj = this.getBounds().toString().match(/[^()]/g).join('').split(',');
+    var boundsObj = this.getBounds().toString().match(/[^() ]/g).join('').split(',');
+    boundsObj = [boundsObj[1], boundsObj[0], boundsObj[3], boundsObj[2]];
 
     // var coords = boundsObj.toString().match(/[^()]/g);
 
@@ -23,10 +25,7 @@ function initialize() {
 
     socket.emit('bounds', boundsObj);
 
-
-    // debugger;
     new google.maps.Marker({position: {lat: 37.783544, lng: -122.408942}, map: this}); 
-    // console.log('here: ',this.contains(38.05184965050697, -121.23022915515139));
   });
   
 }

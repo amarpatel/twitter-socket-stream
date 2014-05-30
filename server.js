@@ -13,34 +13,24 @@ var Twitter = new Twit({
 app.use(express.static(__dirname + '/'))
 
 app.get('/', function(req, res){
-  console.log(__dirname)
-  res.sendfile(__dirname + 'maps.html');
+  console.log(req.method)
 });
 
-io.on('coords', function (socket) {
-  console.log('!');
-});
+
+
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
 
+var stream;
 
+io.sockets.on('connection', function (socket) {
+  socket.on('bounds', function (coords) {
+    stream = Twitter.stream('statuses/filter', { locations: coords });
+    stream.on('tweet', function (tweet) {
+      console.log(tweet.text)
+    })
+  });
+});
 
-// var stream = Twitter.stream('statuses/filter', {locations: mapBounds });
-
-
-// io.on('connection', function (socket) {
-//   console.log('a user connected!');
-//   stream.on('tweets', function (tweet) {
-//     console.log('tweet:',tweet);
-//   })
-// });
-
-
-
-
-Twitter.get('search/tweets', { q: 'coordinates', count: 1, language: 'en' }, function(err, data, response) {
-  console.log('#################  TEXT  #################: \n',data.statuses[0].text);
-  console.log('#################  COORDINATES  #################: \n',data.statuses[0].coordinates);
-})
