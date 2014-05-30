@@ -13,17 +13,18 @@ function initialize() {
   google.maps.event.addListener(map, 'bounds_changed', function () {
     var boundsObj = this.getBounds().toString().match(/[^() ]/g).join('').split(',');
     boundsObj = [boundsObj[1], boundsObj[0], boundsObj[3], boundsObj[2]];
+    console.log(boundsObj);
 
     socket.emit('bounds', boundsObj);
     socket.on('tweet', function (tweet) {
       console.log(tweet.text);
-      new google.maps.Marker({
+      return new google.maps.Marker({
         position: {
-          lat: tweet.get.coordinates[0],
-          lng: tweet.get.coordinates[1]
+          lat: tweet.geo.coordinates[0],
+          lng: tweet.geo.coordinates[1]
         }, 
         map: map,
-        animation: 'BOUNCE'
+        animation: google.maps.Animation.DROP
       }); 
     })
 
