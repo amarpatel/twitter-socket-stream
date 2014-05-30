@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4dQTP6ZlBH-g64zDrvPqJd1ePysVIuiM&sensor=FALSE">
+    </script>
+    <script src="app.js"></script>
+  </head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+  </script>
+  <body>
+    <div id="map-canvas"/>
+  </body>
+</html>
