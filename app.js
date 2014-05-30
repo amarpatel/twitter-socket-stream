@@ -14,21 +14,53 @@ function initialize() {
     var boundsObj = this.getBounds().toString().match(/[^() ]/g).join('').split(',');
     boundsObj = [boundsObj[1], boundsObj[0], boundsObj[3], boundsObj[2]];
 
-    // var coords = boundsObj.toString().match(/[^()]/g);
-
-    // var coords = [boundsObj.Ba.j, boundsObj.ra.j, boundsObj.Ba.k, boundsObj.ra.k];
-    // var botRight = '(' + boundsObj.Ba.j + ', ' + boundsObj.ra.j + ')';
-    // var topLeft = '(' + boundsObj.Ba.k + ', ' + boundsObj.ra.k + ')';
-
-    // console.log('top left: ', topLeft, 'bottom right: ', botRight);
-    console.log('here: ',boundsObj);
-
     socket.emit('bounds', boundsObj);
+    socket.on('tweet', function (tweet) {
+      console.log(tweet.text);
+      new google.maps.Marker({
+        position: {
+          lat: tweet.get.coordinates[0],
+          lng: tweet.get.coordinates[1]
+        }, 
+        map: map,
+        animation: 'BOUNCE'
+      }); 
+    })
 
-    new google.maps.Marker({position: {lat: 37.783544, lng: -122.408942}, map: this}); 
   });
   
+  new google.maps.Marker({position: {lat: 37.783544, lng: -122.408942}, map: map}); 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
+/*
+
+tweet keys:
+[ 'created_at',
+  'id',
+  'id_str',
+  'text',
+  'source',
+  'truncated',
+  'in_reply_to_status_id',
+  'in_reply_to_status_id_str',
+  'in_reply_to_user_id',
+  'in_reply_to_user_id_str',
+  'in_reply_to_screen_name',
+  'user',
+  'geo',
+  'coordinates',
+  'place',
+  'contributors',
+  'retweet_count',
+  'favorite_count',
+  'entities',
+  'favorited',
+  'retweeted',
+  'filter_level',
+  'lang' ]
+
+
+
+*/

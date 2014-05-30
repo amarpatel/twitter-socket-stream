@@ -29,8 +29,40 @@ io.sockets.on('connection', function (socket) {
   socket.on('bounds', function (coords) {
     stream = Twitter.stream('statuses/filter', { locations: coords });
     stream.on('tweet', function (tweet) {
-      console.log(tweet.text)
+      console.log(tweet);
+      socket.emit('tweet', tweet);
     })
   });
 });
 
+
+/*
+
+tweet keys:
+[ 'created_at',
+  'id',
+  'id_str',
+  'text',
+  'source',
+  'truncated',
+  'in_reply_to_status_id',
+  'in_reply_to_status_id_str',
+  'in_reply_to_user_id',
+  'in_reply_to_user_id_str',
+  'in_reply_to_screen_name',
+  'user',
+  'geo',
+  'coordinates',
+  'place',
+  'contributors',
+  'retweet_count',
+  'favorite_count',
+  'entities',
+  'favorited',
+  'retweeted',
+  'filter_level',
+  'lang' ]
+
+
+
+*/
