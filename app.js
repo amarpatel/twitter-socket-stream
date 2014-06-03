@@ -10,27 +10,36 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById("map-canvas"),
       mapOptions);
   
-  google.maps.event.addListener(map, 'bounds_changed', function () {
-    var boundsObj = this.getBounds().toString().match(/[^() ]/g).join('').split(',');
-    boundsObj = [boundsObj[1], boundsObj[0], boundsObj[3], boundsObj[2]];
-    console.log(boundsObj);
+        var inBetween = function inBetween (upperBound, lowerBound, test) {
+          if (test < upperBound && test > lowerBound) {
+            return true;
+          }
+          return false;
+        }
+  google.maps.event.addListener(map, 'idle', function () {
+    var boundsObj = map.getBounds().toString().match(/[^() ]/g).join('').split(',');
 
-    socket.emit('bounds', boundsObj);
+    boundsArr = [boundsObj[1], boundsObj[0], boundsObj[3], boundsObj[2]];
+
+    socket.emit('bounds', boundsArr);
     socket.on('tweet', function (tweet) {
-      console.log(tweet.text);
-      return new google.maps.Marker({
-        position: {
-          lat: tweet.geo.coordinates[0],
-          lng: tweet.geo.coordinates[1]
-        }, 
-        map: map,
-        animation: google.maps.Animation.DROP
-      }); 
+      if (inBetween(boundsArr[3],boundsArr[1], tweet.geo.coordinates[0]) && inBetween(boundsArr[2],boundsArr[0], tweet.geo.coordinates[1])) {
+        console.log(tweet);
+        return new google.maps.Marker({
+          position: {
+            lat: tweet.geo.coordinates[0],
+            lng: tweet.geo.coordinates[1]
+          }, 
+          map: map,
+          animation: google.maps.Animation.DROP
+        }); 
+      }
+
     })
 
   });
   
-  new google.maps.Marker({position: {lat: 37.783544, lng: -122.408942}, map: map}); 
+  // new google.maps.Marker({position: {lat: 37.783544, lng: -122.408942}, map: map}); 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 

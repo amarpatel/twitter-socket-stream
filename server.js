@@ -16,9 +16,6 @@ app.get('/', function(req, res){
   console.log(req.method)
 });
 
-
-
-
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
@@ -27,10 +24,13 @@ var stream;
 
 io.sockets.on('connection', function (socket) {
   socket.on('bounds', function (coords) {
+    console.log(coords)
     stream = Twitter.stream('statuses/filter', { locations: coords });
     stream.on('tweet', function (tweet) {
-      console.log(tweet);
-      socket.emit('tweet', tweet);
+      if (!!tweet.geo) {
+        console.log(tweet);
+        socket.emit('tweet', tweet);        
+      }
     })
   });
 });
